@@ -1,0 +1,10 @@
+[project]
+name = "llm-alpha-mini"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "alpha-mini-rug>=0.7.0",
+    "google-genai>=1.11.0",
+]
