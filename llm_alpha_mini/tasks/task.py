@@ -4,6 +4,9 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import List
 
+from twisted.internet.defer import inlineCallbacks
+
+
 @dataclass
 class Parameter:
     name: str
@@ -20,8 +23,11 @@ class TaskInfo:
 
 
 class BaseTask(ABC):
-
+    """
+    Base task, all tasks should inherit from this class.
+    """
     @abstractmethod
+    @inlineCallbacks
     def execute(self, session):
         raise NotImplementedError("Subclasses must implement this method.")
 
