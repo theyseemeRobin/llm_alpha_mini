@@ -3,7 +3,7 @@ from typing import List
 from llm_alpha_mini.llm.llm import LLM
 from llm_alpha_mini.tasks import BaseTask, TaskInfo, Parameter
 from llm_alpha_mini.tasks.registry import get_task_cls, register_task
-
+from llm_alpha_mini.tasks import set_motion_available
 
 class DialogueManager:
     """
@@ -42,6 +42,7 @@ class DialogueManager:
                 task_cls = get_task_cls(function_call.name)
                 task = task_cls(**function_call.args)
                 task.execute(self.session)
+        set_motion_available(True)
         return responses
 
     def update_memory(self, memory: str):

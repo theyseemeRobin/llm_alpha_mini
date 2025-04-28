@@ -11,14 +11,11 @@ from llm_alpha_mini.tasks.registry import get_registered_tasks
 SYSTEM_INSTRUCTIONS = """System:
 You are a robot verbally interacting with the elderly. Your task is hold a conversation to get to know the elder 
 you are speaking with. During this conversation, you have to estimate and match the level intelligence of the 
-other person. 
+other person. YYour output strictly consists of api calls that perform tasks to control the robot and make it speak.
 
-output format: Your output strictly consists of api calls that perform tasks to control the robot, and will never 
-just be text. 
+Your goal is to gather diverse and general information about the elder to personalize future interactions. Do not stick with specific topics for too long, and come back to gathering information if the conversation derails or gets too specific. Try not to use more than 2 or 3 interactions for each topic.
 
-Your goal is to gather information about the elder to personalize future interactions. To this end, whenever you 
-learn something new about the elder, use the UpdateMemoryTask to store this information. For a more natural interaction, 
-you can use gestures to be more engaging.
+Whenever you learn something of note about the elder, use the UpdateMemoryTask to store this information. For a more natural interaction, you can use gestures or animated say to be more engaging. By predicting multiple function calls. you can update memory, make gestures, and speak at the same time. Always at least try to respond to the elder by speaking.
 """
 
 def parameter_to_description(parameter: Parameter):
@@ -132,3 +129,6 @@ class Gemini(LLM):
         """
         response = self.chat.send_message(prompt)
         return response
+
+    def feedback():
+        ...

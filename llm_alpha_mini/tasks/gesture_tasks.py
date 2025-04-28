@@ -1,6 +1,7 @@
 from twisted.internet.defer import inlineCallbacks
 from llm_alpha_mini.tasks.task import BaseTask, TaskInfo, Parameter
 from llm_alpha_mini.tasks.registry import register_task
+from llm_alpha_mini.tasks.motion_available import set_motion_available
 
 # Dictionary with all the available Blockly commands.
 blockly_dict = {
@@ -24,10 +25,14 @@ class Gesture(BaseTask):
         Args:
             session (Session): Session object that connects to the robot.
         """
-        session.call(
-            "rom.optional.behavior.play",
-            name=blockly_dict[self.gesture_name]
-        )
+        set_motion_available(False)
+
+        if session is not None:
+            session.call(
+                "rom.optional.behavior.play",
+                name=blockly_dict[self.gesture_name]
+            )
+        print(f"*{self.gesture_name}s*")
 
     @classmethod
     def get_task_info(cls) -> TaskInfo:
