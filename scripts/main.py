@@ -13,8 +13,7 @@ def main(session, details):
 
     # Alpha mini introduces itself.
     yield session.call("rom.optional.behavior.play", name='BlocklyStand')
-    yield session.call("rom.optional.behavior.play", name="BlocklyWaveRightArm")
-    yield session.call("rie.dialogue.say", text="Hello, I am successfully connected!")
+    session.call("rom.optional.behavior.play", name="BlocklyWaveRightArm")
 
     # Gemini setup
     gemini = Gemini(model="gemini-2.0-flash", api_key=argv[1])
@@ -25,6 +24,8 @@ def main(session, details):
 
     # Close the connection with the robot
     session.leave()
+
+
 
 @inlineCallbacks
 def automatic_speech_recognition(session, dialogue_manager):
@@ -50,7 +51,7 @@ def automatic_speech_recognition(session, dialogue_manager):
     # Language
     yield session.call("rie.dialogue.config.language", lang="en")
     # Greeting
-    yield session.call("rie.dialogue.say", text="Say something")
+    yield session.call("rie.dialogue.say", text="Hello! My name is R.O.B.")
     print("listening to audio")
     yield session.subscribe(audio_processor.listen_continues, "rom.sensor.hearing.stream")
     yield session.call("rom.sensor.hearing.stream")
@@ -62,7 +63,8 @@ def automatic_speech_recognition(session, dialogue_manager):
         else:
             word_array = audio_processor.give_me_words()
             # Pass the string to the dialogue manager.
-            yield dialogue_manager.listen(word_array)
+            dialogue_manager.listen(word_array)
+            audio_processor.words = []
         audio_processor.loop()
 
 # Robot connection setup
@@ -73,7 +75,7 @@ wamp = Component(
 		"serializers": ["msgpack"],
 		"max_retries": 0
 	}],
-	realm="ENTER REALM CODE",
+	realm="rie.680f74dd29c04006ecc06a97",
 )
 wamp.on_join(main)
 

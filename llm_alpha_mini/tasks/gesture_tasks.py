@@ -8,6 +8,8 @@ blockly_dict = {
     "wave" : "BlocklyWaveRightArm",
     "dab" : "BlocklyDab",
     "dance" : "BlocklyChickenDance",
+    "standup" : "BlocklyStand",
+    "haka" : "BlocklyHaka"
 }
 
 @register_task
@@ -18,6 +20,7 @@ class Gesture(BaseTask):
     def __init__(self, gesture: str):
         self.gesture_name = gesture
 
+    @inlineCallbacks
     def execute(self, session):
         """
         Execute the specified gesture task.
@@ -28,7 +31,7 @@ class Gesture(BaseTask):
         set_motion_available(False)
 
         if session is not None:
-            session.call(
+            yield session.call(
                 "rom.optional.behavior.play",
                 name=blockly_dict[self.gesture_name]
             )
@@ -46,7 +49,7 @@ class Gesture(BaseTask):
             name="Gesture",
             task_description="Gesture to the conversation partner",
             parameters=[
-                Parameter("gesture", "The gesture to perform", "string", ["wave", "dab", "dance"])
+                Parameter("gesture", "The gesture to perform", "string", list(blockly_dict.keys())),
             ],
             task_cls=cls
         )

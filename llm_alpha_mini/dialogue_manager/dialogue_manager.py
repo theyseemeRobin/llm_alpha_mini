@@ -1,5 +1,7 @@
 from typing import List
 
+from twisted.internet.defer import inlineCallbacks
+
 from llm_alpha_mini.llm.llm import LLM
 from llm_alpha_mini.tasks import BaseTask, TaskInfo, Parameter
 from llm_alpha_mini.tasks.registry import get_task_cls, register_task
@@ -22,6 +24,7 @@ class DialogueManager:
         self.llm = llm
         self.memory = []
 
+    @inlineCallbacks
     def listen(self, user_input: str) -> str:
         """
         Function that takes the user_input and returns the LLM's response through the robot.
@@ -32,16 +35,17 @@ class DialogueManager:
         Returns:
             str: The LLM's response.'
         """
+        print(f"User input: {user_input}")
         responses = self.llm.query(f"User: {user_input}")
         for function_call in responses.function_calls:
             if function_call and function_call.name == "UpdateMemoryTask":
                 task_cls = get_task_cls(function_call.name)
                 task = task_cls(**function_call.args)
-                task.execute(self)
+                yield task.execute(self)
             elif function_call:
                 task_cls = get_task_cls(function_call.name)
                 task = task_cls(**function_call.args)
-                task.execute(self.session)
+                yield task.execute(self.session)
         set_motion_available(True)
         return responses
 

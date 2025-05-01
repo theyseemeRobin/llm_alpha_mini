@@ -26,12 +26,14 @@ class Say(BaseTask):
             session (Session): Session object that connects to the robot.
         """
         mode = "rie.dialogue.say_animated" if motion_available() else "rie.dialogue.say"
+
+        print(f"{self.text} | {mode}")
+
         if session is not None:
             yield session.call(
                 mode,
                 text=self.text
             )
-        print(f"{self.text} | {mode}")
 
     @classmethod
     def get_task_info(cls) -> TaskInfo:
